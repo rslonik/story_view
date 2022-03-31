@@ -43,7 +43,7 @@ class VideoLoader {
 class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
   final VideoLoader videoLoader;
-  final bool isHLS;
+  final bool? isHLS;
 
   StoryVideo(this.videoLoader,
       {this.storyController, this.isHLS = false, Key? key})
@@ -51,7 +51,7 @@ class StoryVideo extends StatefulWidget {
 
   static StoryVideo url(String url,
       {StoryController? controller,
-      bool isHLS,
+      bool? isHLS,
       Map<String, dynamic>? requestHeaders,
       Key? key}) {
     return StoryVideo(VideoLoader(url, requestHeaders: requestHeaders),
@@ -81,13 +81,13 @@ class StoryVideoState extends State<StoryVideo> {
       if (widget.videoLoader.state == LoadState.success) {
         /// if video is HLS, need to load it from network, if is a downloaded file, need to load it from local cache
         if (widget.isHLS) {
-          this.playerController =
+          playerController =
               VideoPlayerController.network(widget.videoLoader.url);
         } else {
-          this.playerController =
-              VideoPlayerController.file(widget.videoLoader.videoFile);
+          playerController =
+              VideoPlayerController.file(widget.videoLoader.videoFile!);
         }
-        this.playerController.initialize().then((v) {
+        playerController!.initialize().then((v) {
           setState(() {});
           widget.storyController!.play();
         });
@@ -120,7 +120,7 @@ class StoryVideoState extends State<StoryVideo> {
     }
 
     return widget.videoLoader.state == LoadState.loading ||
-            !playerController.value.initialized
+            !playerController!.value.initialized
         ? Center(
             child: Container(
               width: 70,
