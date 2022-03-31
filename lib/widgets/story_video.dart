@@ -80,7 +80,7 @@ class StoryVideoState extends State<StoryVideo> {
     widget.videoLoader.loadVideo(() {
       if (widget.videoLoader.state == LoadState.success) {
         /// if video is HLS, need to load it from network, if is a downloaded file, need to load it from local cache
-        if (widget.isHLS) {
+        if (widget.isHLS ?? false) {
           playerController =
               VideoPlayerController.network(widget.videoLoader.url);
         } else {
@@ -120,7 +120,7 @@ class StoryVideoState extends State<StoryVideo> {
     }
 
     return widget.videoLoader.state == LoadState.loading ||
-            !playerController!.value.initialized
+            !playerController!.value.isInitialized
         ? Center(
             child: Container(
               width: 70,
